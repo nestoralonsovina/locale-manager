@@ -12,23 +12,10 @@
       </a>
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
+      <li nz-submenu nzOpen nzTitle="Opened files" nzIcon="file">
         <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/welcome">Welcome</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Monitor</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Workplace</a>
-          </li>
-        </ul>
-      </li>
-      <li nz-submenu nzOpen nzTitle="Form" nzIcon="form">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a>Basic Form</a>
+          <li nz-menu-item nzMatchRouter *ngFor="let file of currentFiles">
+          <a [routerLink]="['/view', file.name]" >{{ file.name }}</a>
           </li>
         </ul>
       </li>
@@ -44,18 +31,21 @@
             ></i>
         </span>
         <nz-button-group>
-          <button nz-button>
+          <!-- UPLOAD BUTTON -->
+          <button nz-button (click)="uploadClick()">
             <span>
               <i nz-icon nzType="upload" nzTheme="outline"></i>
               Upload File
             </span>
           </button>
-          <button nz-button>
+          <!-- DOWNLOAD BUTTON -->
+          <button nz-button (click)="downloadclick()">
             <span>
               <i nz-icon nzType="download" nzTheme="outline"></i>
               Download File
             </span>
           </button>
+          <input #uploadInput type="file" nz-input style="display: none;" (change)="onInputFile()" accept=".json" multiple>
         </nz-button-group>
       </div>
     </nz-header>

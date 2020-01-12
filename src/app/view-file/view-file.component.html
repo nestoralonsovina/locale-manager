@@ -1,0 +1,37 @@
+<nz-layout class="left-layout">
+    <nz-sider nzTheme="light">
+      <ul nz-menu nzTheme="light" nzMode="inline">
+        <li nz-menu-item *ngFor="let item of fileData">
+          <a [routerLink]="['/view', currentFile.name, item.id]" >{{ item.id }}</a>
+        </li>
+      </ul>
+    </nz-sider>
+    <nz-layout class="right-layout">
+      <nz-content>
+        <nz-breadcrumb [nzSeparator]="iconTemplate">
+          <nz-breadcrumb-item>
+            <a routerLink="/">Home</a>
+          </nz-breadcrumb-item>
+          <nz-breadcrumb-item>
+            <a [routerLink]="['/view', currentFile.name]" >{{ currentFile.name }}</a>
+          </nz-breadcrumb-item>
+          <nz-breadcrumb-item *ngIf="currentResponse">
+            {{ currentResponse.id }}
+          </nz-breadcrumb-item>
+        </nz-breadcrumb>
+        <ng-template #iconTemplate><i nz-icon nzType="arrow-right"></i></ng-template>
+        <div class="inner-content">
+            <div *ngIf='currentResponse'>
+                <div class="response" *ngFor="let reply of currentResponse.replies">
+                    <nz-input-group nzSize="large" [nzAddOnAfter]="suffixButton">
+                        <input style="word-break: break-all;" type="text" nz-input placeholder="Message" value="{{ reply.text }}"/>
+                      </nz-input-group>
+                      <ng-template #suffixButton>
+                        <button nz-button nzType="danger" nzSearch><i nz-icon nzType="delete"></i></button>
+                      </ng-template>
+                </div>
+            </div>
+        </div>
+      </nz-content>
+    </nz-layout>
+  </nz-layout>
