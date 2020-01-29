@@ -1,13 +1,14 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ManagerService, LocaleFile } from "../manager.service";
 import * as _ from "lodash";
+import { fromEvent } from 'rxjs';
 
 interface Reply {
     text: string;
 }
 
-class ResponseModel {
+export class ResponseModel {
     constructor(
         public id: string,
         public replies: Array<Reply>,
@@ -28,7 +29,7 @@ export class ViewFileComponent implements OnInit {
 
     constructor(
         private route: ActivatedRoute,
-        private managerService: ManagerService
+        public managerService: ManagerService
     ) {}
 
     ngOnInit() {
@@ -43,6 +44,7 @@ export class ViewFileComponent implements OnInit {
                 };
             } else {
                 this.currentFile = file;
+                this.managerService.currentFile = this.currentFile;
                 let responseIndex = -1;
                 let index = 0;
 

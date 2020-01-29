@@ -1,37 +1,123 @@
 <nz-layout class="left-layout">
     <nz-sider nzTheme="light">
-      <ul nz-menu nzTheme="light" nzMode="inline">
-        <li nz-menu-item *ngFor="let item of fileData">
-          <a [routerLink]="['/view', currentFile.name, item.id]" >{{ item.id }}</a>
-        </li>
-      </ul>
+        <ul nz-menu nzTheme="light" nzMode="inline">
+            <ng-container *ngFor="let item of fileData">
+                <ng-container
+                    *ngIf="
+                        currentResponse && currentResponse.id == item.id;
+                        then currentItem;
+                        else normalItem
+                    "
+                >
+                </ng-container>
+                <ng-template #currentItem>
+                    <li nzSelected nz-menu-item>
+                        <a
+                            [routerLink]="['/view', currentFile.name, item.id]"
+                            >{{ item.id }}</a
+                        >
+                    </li>
+                </ng-template>
+                <ng-template #normalItem>
+                    <li nz-menu-item>
+                        <a
+                            [routerLink]="['/view', currentFile.name, item.id]"
+                            >{{ item.id }}</a
+                        >
+                    </li>
+                </ng-template>
+            </ng-container>
+        </ul>
     </nz-sider>
     <nz-layout class="right-layout">
-      <nz-content>
-        <nz-breadcrumb [nzSeparator]="iconTemplate">
-          <nz-breadcrumb-item>
-            <a routerLink="/">Home</a>
-          </nz-breadcrumb-item>
-          <nz-breadcrumb-item>
-            <a [routerLink]="['/view', currentFile.name]" >{{ currentFile.name }}</a>
-          </nz-breadcrumb-item>
-          <nz-breadcrumb-item *ngIf="currentResponse">
-            {{ currentResponse.id }}
-          </nz-breadcrumb-item>
-        </nz-breadcrumb>
-        <ng-template #iconTemplate><i nz-icon nzType="arrow-right"></i></ng-template>
-        <div class="inner-content">
-            <div *ngIf='currentResponse'>
-                <div class="response" *ngFor="let reply of currentResponse.replies">
-                    <nz-input-group nzSize="large" [nzAddOnAfter]="suffixButton">
-                        <input style="word-break: break-all;" type="text" nz-input placeholder="Message" value="{{ reply.text }}"/>
-                      </nz-input-group>
-                      <ng-template #suffixButton>
-                        <button nz-button nzType="danger" nzSearch><i nz-icon nzType="delete"></i></button>
-                      </ng-template>
+        <nz-content>
+            <nz-breadcrumb [nzSeparator]="iconTemplate">
+                <nz-breadcrumb-item>
+                    <a routerLink="/">Home</a>
+                </nz-breadcrumb-item>
+                <nz-breadcrumb-item>
+                    <a [routerLink]="['/view', currentFile.name]">{{
+                        currentFile.name
+                    }}</a>
+                </nz-breadcrumb-item>
+                <nz-breadcrumb-item *ngIf="currentResponse">
+                    {{ currentResponse.id }}
+                </nz-breadcrumb-item>
+            </nz-breadcrumb>
+            <ng-template #iconTemplate
+                ><i nz-icon nzType="arrow-right"></i
+            ></ng-template>
+            <div class="inner-content">
+                <div *ngIf="currentResponse">
+                    <div
+                        class="response"
+                        *ngFor="let reply of currentResponse.replies | keyvalue"
+                    >
+                        <nz-input-group
+                            nzSize="large"
+                            [nzAddOnAfter]="suffixButton"
+                        >
+                            <input
+                                style="word-break: break-all;"
+                                type="text"
+                                nz-input
+                                placeholder="Message"
+                                [(ngModel)]="reply.value.text"
+                            />
+                        </nz-input-group>
+                        <ng-template #suffixButton>
+                            <button
+                                nz-button
+                                nzType="danger"
+                                nzSearch
+                                (click)="
+                                    managerService.deleteReply(
+                                        currentFile,
+                                        currentResponse,
+                                        reply.key
+                                    )
+                                "
+                            >
+                                <i nz-icon nzType="delete"></i>
+                            </button>
+                        </ng-template>
+                    </div>
+                    <button
+                        nzBlock
+                        nz-button
+                        nzType="primary"
+                        (click)="
+                            managerService.addReply(
+                                currentFile,
+                                currentResponse
+                            )
+                        "
+                    >
+                        Add<i nz-icon nzType="plus"></i>
+                    </button>
                 </div>
             </div>
+        </nz-content>
+        <div class="create-response">
+            <nz-input-group nzSize="large" [nzAddOnAfter]="suffixButton">
+                <input #idInput
+                    style="word-break: break-all;"
+                    type="text"
+                    nz-input
+                    placeholder="New Id"
+                    value=""
+                />
+            </nz-input-group>
+            <ng-template #suffixButton>
+                <button
+                    nz-button
+                    nzType="primary"
+                    nzSearch
+                    (click)="managerService.addResponse(currentFile, idInput.value)"
+                >
+                <i nz-icon nzType="plus"></i>
+                </button>
+            </ng-template>
         </div>
-      </nz-content>
     </nz-layout>
-  </nz-layout>
+</nz-layout>

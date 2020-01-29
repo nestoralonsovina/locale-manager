@@ -39,7 +39,7 @@
             </span>
           </button>
           <!-- DOWNLOAD BUTTON -->
-          <button nz-button (click)="downloadclick()">
+          <button nz-button (click)="managerService.exportFile(managerService.currentFile)">
             <span>
               <i nz-icon nzType="download" nzTheme="outline"></i>
               Download File
@@ -51,7 +51,7 @@
     </nz-header>
     <nz-content>
       <div class="inner-content">
-        <router-outlet></router-outlet>
+        <router-outlet ></router-outlet>
       </div>
     </nz-content>
   </nz-layout>
